@@ -233,11 +233,18 @@
     color:var(--ink-soft);
     border:1px solid var(--line);
   }
-  .context-line{
-    font-size:.66rem;
+  .role-time{
+    font-size:.6rem;
     color:var(--ink-soft);
-    margin-top:8px;
+    margin-top:5px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .context-line{
+    font-size:.64rem;
+    color:var(--ink-soft);
+    margin-top:6px;
     line-height:1.4;
+    opacity:.75;
   }
   .day-num{
     font-family:'JetBrains Mono',monospace;
@@ -279,6 +286,56 @@
     margin-top:5px;
     font-weight:600;
   }
+
+  /* work-summary panel — only visible when a person filter is active */
+  .work-summary{
+    display:none;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 20px;
+    margin-bottom:22px;
+  }
+  .work-summary.is-visible{display:block;}
+  .work-summary h3{
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.2rem;
+    font-weight:700;
+    margin:0 0 12px;
+  }
+  .ws-row{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    margin-bottom:10px;
+  }
+  .ws-row:last-child{margin-bottom:0;}
+  .ws-label{
+    flex-shrink:0;
+    width:110px;
+    font-size:.72rem;
+    font-weight:700;
+    padding:4px 10px;
+    border-radius:999px;
+    text-align:center;
+  }
+  .ws-label.sang, .ws-label.toi{color:#fff;background:var(--ws-accent);}
+  .ws-label.nghi{color:var(--ink-soft);border:1px solid var(--line);}
+  .ws-dates{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    flex:1;
+  }
+  .ws-dates .chip-date{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:3px 7px;
+  }
+  .ws-empty{font-size:.75rem;color:var(--ink-soft);}
 
   /* fixed legend — always same content, never reflows */
   .legend{
@@ -329,6 +386,8 @@
 
   <div class="filter-bar" id="filterBar"></div>
 
+  <div class="work-summary" id="workSummary"></div>
+
   <div class="cal-head">
     <div>Thứ 2</div><div>Thứ 3</div><div>Thứ 4</div><div>Thứ 5</div><div>Thứ 6</div><div>Thứ 7</div><div>CN</div>
   </div>
@@ -354,6 +413,7 @@ const SCHEDULE = [{"date": "2026-07-01", "day": 1, "weekday": "Thứ 4", "sang":
 
 const COLOR = {'Phương':'#C1694F','My':'#7E9179','Khoa':'#5E7A93'};
 const PEOPLE = Object.keys(COLOR);
+const SHIFT_TIME = {sang:'8h00 – 14h30', toi:'14h30 – 21h30'};
 
 let activeFilter = null; // null = "Tất cả"
 
@@ -373,6 +433,7 @@ function setFilter(p){
   renderStats();
   renderFilterBar();
   renderCalendar();
+  renderWorkSummary();
 }
 
 function renderStats(){
@@ -417,6 +478,45 @@ function renderFilterBar(){
   });
 }
 
+function renderWorkSummary(){
+  const el = document.getElementById('workSummary');
+  if(!activeFilter){
+    el.classList.remove('is-visible');
+    el.innerHTML = '';
+    return;
+  }
+  el.classList.add('is-visible');
+  el.style.setProperty('--ws-accent', COLOR[activeFilter]);
+
+  const sangDays = [], toiDays = [], nghiDays = [];
+  SCHEDULE.forEach(d=>{
+    if(d.sang===activeFilter) sangDays.push(d.day);
+    else if(d.toi===activeFilter) toiDays.push(d.day);
+    else nghiDays.push(d.day);
+  });
+
+  const fmt = arr => arr.length
+    ? `<div class="ws-dates">${arr.map(n=>`<span class="chip-date">${String(n).padStart(2,'0')}/07</span>`).join('')}</div>`
+    : `<span class="ws-empty">Không có ngày nào</span>`;
+
+  el.innerHTML = `
+    <h3>Lịch làm việc của ${activeFilter}</h3>
+    <div class="ws-row">
+      <span class="ws-label sang">Ca sáng · ${sangDays.length} ngày</span>
+      ${fmt(sangDays)}
+    </div>
+    <div class="ws-row">
+      <span class="ws-label toi">Ca tối · ${toiDays.length} ngày</span>
+      ${fmt(toiDays)}
+    </div>
+    <div class="ws-row">
+      <span class="ws-label nghi">Nghỉ · ${nghiDays.length} ngày</span>
+      ${fmt(nghiDays)}
+    </div>
+  `;
+}
+
+
 function weekdayIndex(w){
   const map = {'Thứ 2':0,'Thứ 3':1,'Thứ 4':2,'Thứ 5':3,'Thứ 6':4,'Thứ 7':5,'Chủ nhật':6};
   return map[w];
@@ -446,14 +546,14 @@ function renderCalendar(){
       const r = roleOf(d, activeFilter);
       cell.className = 'day-cell filtered-' + r.role + (d.note?' note':'');
       cell.style.setProperty('--accent', COLOR[activeFilter]);
-      const context = r.role==='nghi'
-        ? `Sáng: ${d.sang} · Tối: ${d.toi}`
-        : `Nghỉ: ${d.nghi}`;
+      const timeHtml = (r.role==='sang' || r.role==='toi')
+        ? `<div class="role-time">${SHIFT_TIME[r.role]}</div>`
+        : `<div class="context-line">Người trực: ${d.sang} (sáng) · ${d.toi} (tối)</div>`;
       cell.innerHTML = `
         <div class="day-weekday">${d.weekday}</div>
         <div class="day-num">${pad}</div>
         <div class="role-badge role-${r.role}">${r.label}</div>
-        <div class="context-line">${context}</div>
+        ${timeHtml}
         ${noteHtml}
       `;
     } else {
@@ -476,6 +576,7 @@ document.getElementById('updatedNote').textContent = 'Tổng ' + SCHEDULE.length
 renderStats();
 renderFilterBar();
 renderCalendar();
+renderWorkSummary();
 </script>
 </body>
 </html>
