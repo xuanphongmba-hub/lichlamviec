@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>COCO CLOTHING — Lịch trực tháng 7</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
+
+  :root{
+    --cream:#FBF6EF;
+    --paper:#FFFFFF;
+    --ink:#2B2420;
+    --ink-soft:#6B6157;
+    --terracotta:#C1694F;
+    --sage:#7E9179;
+    --dusty-blue:#5E7A93;
+    --gold:#C9A227;
+    --line:#E7DFD2;
+    --accent:#2B2420;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:40px 28px 80px;}
+
+  /* HEADER */
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:18px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:22px;
+    margin-bottom:30px;
+  }
+  .brand{display:flex;align-items:center;gap:14px;}
+  .tag{
+    width:44px;height:56px;
+    background:var(--terracotta);
+    border-radius:3px 3px 10px 10px;
+    position:relative;
+    flex-shrink:0;
+  }
+  .tag::before{
+    content:'';
+    position:absolute;top:-10px;left:50%;
+    transform:translateX(-50%);
+    width:14px;height:14px;
+    border:3px solid var(--ink);
+    border-radius:50%;
+    background:transparent;
+  }
+  .tag::after{
+    content:'';
+    position:absolute;top:8px;left:50%;
+    transform:translateX(-50%);
+    width:20px;height:2px;background:var(--cream);
+    box-shadow:0 6px 0 var(--cream),0 12px 0 var(--cream);
+  }
+  h1{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:700;
+    font-size:2.5rem;
+    margin:0;
+    line-height:1;
+    letter-spacing:.5px;
+  }
+  .sub{color:var(--ink-soft);font-size:.85rem;margin-top:6px;letter-spacing:.03em;}
+  .period{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    text-align:right;
+  }
+  .period b{color:var(--ink);}
+
+  /* STATS */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:30px;
+  }
+  .stat-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 20px;
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .stat-card:hover{transform:translateY(-2px);}
+  .stat-card::before{
+    content:'';
+    position:absolute;left:0;top:0;bottom:0;width:5px;
+  }
+  .stat-card.phuong::before{background:var(--terracotta);}
+  .stat-card.my::before{background:var(--sage);}
+  .stat-card.khoa::before{background:var(--dusty-blue);}
+  .stat-card.active{border-color:var(--card-accent);box-shadow:0 0 0 1px var(--card-accent);}
+  .stat-name{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:700;
+    font-size:1.4rem;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .stat-name .check{
+    font-size:.65rem;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    color:var(--card-accent);
+    opacity:0;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+  .stat-card.active .stat-name .check{opacity:1;}
+  .stat-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+    border-top:1px dashed var(--line);
+    padding-top:10px;
+  }
+  .stat-row span b{color:var(--ink);font-family:'JetBrains Mono',monospace;font-weight:600;}
+
+  /* FILTER — single tab bar, fixed height, one selection at a time */
+  .filter-bar{
+    display:flex;
+    align-items:center;
+    gap:0;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:5px;
+    margin-bottom:22px;
+    width:fit-content;
+  }
+  .tab{
+    position:relative;
+    border:none;
+    background:transparent;
+    color:var(--ink-soft);
+    font-family:'Inter',sans-serif;
+    font-size:.84rem;
+    font-weight:600;
+    padding:9px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:color .15s ease;
+  }
+  .tab .dot{
+    width:8px;height:8px;border-radius:50%;
+    flex-shrink:0;
+  }
+  .tab.is-active{
+    background:var(--tab-accent, var(--ink));
+    color:#fff;
+  }
+  .tab:not(.is-active):hover{color:var(--ink);}
+
+  /* CALENDAR */
+  .cal-head{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:8px;
+    margin-bottom:8px;
+  }
+  .cal-head div{
+    text-align:center;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .cal-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:8px;
+  }
+  .day-cell{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+    min-height:112px;
+    padding:9px 10px;
+    position:relative;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .day-cell.empty{background:transparent;border:none;}
+  .day-cell.note{outline:2px solid var(--gold);outline-offset:-2px;}
+
+  /* filtered (single-person) mode */
+  .day-cell.filtered-sang, .day-cell.filtered-toi{
+    background:color-mix(in srgb, var(--accent) 9%, var(--paper));
+    border-color:var(--accent);
+  }
+  .day-cell.filtered-nghi{
+    background:repeating-linear-gradient(135deg, #F1ECE2, #F1ECE2 6px, #EBE4D6 6px, #EBE4D6 12px);
+    border-style:dashed;
+    border-color:var(--line);
+  }
+  .role-badge{
+    display:inline-block;
+    font-size:.68rem;
+    font-weight:700;
+    letter-spacing:.03em;
+    padding:3px 9px;
+    border-radius:999px;
+    margin-top:2px;
+  }
+  .role-badge.role-sang, .role-badge.role-toi{
+    background:var(--accent);
+    color:#fff;
+  }
+  .role-badge.role-nghi{
+    background:transparent;
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+  }
+  .context-line{
+    font-size:.66rem;
+    color:var(--ink-soft);
+    margin-top:8px;
+    line-height:1.4;
+  }
+  .day-num{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:600;
+    font-size:.95rem;
+  }
+  .day-weekday{
+    font-size:.63rem;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    margin-bottom:6px;
+  }
+  .shift-line{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:.72rem;
+    margin-top:4px;
+    line-height:1.3;
+  }
+  .shift-tag{
+    font-size:.6rem;
+    color:var(--ink-soft);
+    width:30px;
+    flex-shrink:0;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .swatch{
+    display:inline-block;
+    width:7px;height:7px;
+    border-radius:50%;
+    flex-shrink:0;
+  }
+  .off-line{font-size:.66rem;color:var(--ink-soft);margin-top:5px;}
+  .note-line{
+    font-size:.62rem;
+    color:var(--gold);
+    margin-top:5px;
+    font-weight:600;
+  }
+
+  /* fixed legend — always same content, never reflows */
+  .legend{
+    display:flex;gap:22px;margin:26px 2px 0;flex-wrap:wrap;
+    font-size:.78rem;color:var(--ink-soft);
+    min-height:20px;
+  }
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .legend .swatch-sq{width:10px;height:10px;border-radius:3px;display:inline-block;flex-shrink:0;}
+
+  footer{
+    margin-top:40px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    font-size:.72rem;
+    color:var(--ink-soft);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  @media (max-width:720px){
+    .stats{grid-template-columns:1fr;}
+    .filter-bar{width:100%;overflow-x:auto;}
+    .cal-head, .cal-grid{grid-template-columns:repeat(7,minmax(38px,1fr));}
+    .day-cell{min-height:92px;padding:6px 5px;}
+    .shift-tag{width:22px;}
+    h1{font-size:1.9rem;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="tag"></div>
+      <div>
+        <h1>COCO CLOTHING</h1>
+        <div class="sub">Bảng theo dõi ca trực nhân sự</div>
+      </div>
+    </div>
+    <div class="period">Ca sáng <b>8h–14h30</b> · Ca tối <b>14h30–21h30</b><br>Kỳ: <b>01/07 – 31/07/2026</b></div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="filter-bar" id="filterBar"></div>
+
+  <div class="cal-head">
+    <div>Thứ 2</div><div>Thứ 3</div><div>Thứ 4</div><div>Thứ 5</div><div>Thứ 6</div><div>Thứ 7</div><div>CN</div>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+
+  <div class="legend">
+    <span><span class="swatch-sq" style="background:var(--terracotta)"></span> Phương</span>
+    <span><span class="swatch-sq" style="background:var(--sage)"></span> My</span>
+    <span><span class="swatch-sq" style="background:var(--dusty-blue)"></span> Khoa</span>
+    <span><span class="swatch-sq" style="border:2px solid var(--gold);background:transparent"></span> Ngày có ghi chú</span>
+    <span><span class="swatch-sq" style="background:repeating-linear-gradient(135deg,#F1ECE2,#F1ECE2 3px,#EBE4D6 3px,#EBE4D6 6px);border:1px dashed var(--line)"></span> Ngày nghỉ (khi đang lọc)</span>
+  </div>
+
+  <footer>
+    <span>COCO CLOTHING · Dashboard lịch làm việc</span>
+    <span id="updatedNote"></span>
+  </footer>
+
+</div>
+
+<script>
+const SCHEDULE = [{"date": "2026-07-01", "day": 1, "weekday": "Thứ 4", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-02", "day": 2, "weekday": "Thứ 5", "sang": "Khoa", "toi": "Phương", "nghi": "My", "note": ""}, {"date": "2026-07-03", "day": 3, "weekday": "Thứ 6", "sang": "Khoa", "toi": "My", "nghi": "Phương", "note": ""}, {"date": "2026-07-04", "day": 4, "weekday": "Thứ 7", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-05", "day": 5, "weekday": "Chủ nhật", "sang": "Khoa", "toi": "Phương", "nghi": "My", "note": ""}, {"date": "2026-07-06", "day": 6, "weekday": "Thứ 2", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": "Nghỉ đi thi"}, {"date": "2026-07-07", "day": 7, "weekday": "Thứ 3", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-08", "day": 8, "weekday": "Thứ 4", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-09", "day": 9, "weekday": "Thứ 5", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-10", "day": 10, "weekday": "Thứ 6", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-11", "day": 11, "weekday": "Thứ 7", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-12", "day": 12, "weekday": "Chủ nhật", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-13", "day": 13, "weekday": "Thứ 2", "sang": "Khoa", "toi": "Phương", "nghi": "My", "note": ""}, {"date": "2026-07-14", "day": 14, "weekday": "Thứ 3", "sang": "Khoa", "toi": "My", "nghi": "Phương", "note": ""}, {"date": "2026-07-15", "day": 15, "weekday": "Thứ 4", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-16", "day": 16, "weekday": "Thứ 5", "sang": "Khoa", "toi": "Phương", "nghi": "My", "note": ""}, {"date": "2026-07-17", "day": 17, "weekday": "Thứ 6", "sang": "Khoa", "toi": "My", "nghi": "Phương", "note": ""}, {"date": "2026-07-18", "day": 18, "weekday": "Thứ 7", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-19", "day": 19, "weekday": "Chủ nhật", "sang": "Khoa", "toi": "Phương", "nghi": "My", "note": ""}, {"date": "2026-07-20", "day": 20, "weekday": "Thứ 2", "sang": "Khoa", "toi": "My", "nghi": "Phương", "note": ""}, {"date": "2026-07-21", "day": 21, "weekday": "Thứ 3", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-22", "day": 22, "weekday": "Thứ 4", "sang": "Khoa", "toi": "Phương", "nghi": "My", "note": ""}, {"date": "2026-07-23", "day": 23, "weekday": "Thứ 5", "sang": "Khoa", "toi": "My", "nghi": "Phương", "note": ""}, {"date": "2026-07-24", "day": 24, "weekday": "Thứ 6", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-25", "day": 25, "weekday": "Thứ 7", "sang": "Khoa", "toi": "Phương", "nghi": "My", "note": ""}, {"date": "2026-07-26", "day": 26, "weekday": "Chủ nhật", "sang": "Khoa", "toi": "My", "nghi": "Phương", "note": ""}, {"date": "2026-07-27", "day": 27, "weekday": "Thứ 2", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-28", "day": 28, "weekday": "Thứ 3", "sang": "Khoa", "toi": "Phương", "nghi": "My", "note": ""}, {"date": "2026-07-29", "day": 29, "weekday": "Thứ 4", "sang": "Khoa", "toi": "My", "nghi": "Phương", "note": ""}, {"date": "2026-07-30", "day": 30, "weekday": "Thứ 5", "sang": "Phương", "toi": "My", "nghi": "Khoa", "note": ""}, {"date": "2026-07-31", "day": 31, "weekday": "Thứ 6", "sang": "Khoa", "toi": "Phương", "nghi": "My", "note": ""}];
+
+const COLOR = {'Phương':'#C1694F','My':'#7E9179','Khoa':'#5E7A93'};
+const PEOPLE = Object.keys(COLOR);
+
+let activeFilter = null; // null = "Tất cả"
+
+function computeStats(){
+  const stats = {};
+  PEOPLE.forEach(p=>stats[p]={sang:0,toi:0,nghi:0});
+  SCHEDULE.forEach(d=>{
+    if(stats[d.sang]) stats[d.sang].sang++;
+    if(stats[d.toi]) stats[d.toi].toi++;
+    if(stats[d.nghi]) stats[d.nghi].nghi++;
+  });
+  return stats;
+}
+
+function setFilter(p){
+  activeFilter = (activeFilter===p) ? null : p;
+  renderStats();
+  renderFilterBar();
+  renderCalendar();
+}
+
+function renderStats(){
+  const stats = computeStats();
+  const el = document.getElementById('stats');
+  const cls = {'Phương':'phuong','My':'my','Khoa':'khoa'};
+  el.innerHTML = PEOPLE.map(p=>{
+    const s = stats[p];
+    const isActive = activeFilter===p;
+    return `<div class="stat-card ${cls[p]} ${isActive?'active':''}" style="--card-accent:${COLOR[p]}" data-person="${p}">
+      <div class="stat-name">${p}<span class="check">Đang lọc</span></div>
+      <div class="stat-row">
+        <span>Ca sáng<br><b>${s.sang}</b></span>
+        <span>Ca tối<br><b>${s.toi}</b></span>
+        <span>Ngày nghỉ<br><b>${s.nghi}</b></span>
+        <span>Tổng ca<br><b>${s.sang+s.toi}</b></span>
+      </div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.stat-card').forEach(card=>{
+    card.onclick = ()=>setFilter(card.dataset.person);
+  });
+}
+
+function renderFilterBar(){
+  const el = document.getElementById('filterBar');
+  el.innerHTML = '';
+
+  const allTab = document.createElement('button');
+  allTab.className = 'tab' + (activeFilter===null ? ' is-active' : '');
+  allTab.textContent = 'Tất cả';
+  allTab.onclick = ()=>setFilter(null);
+  el.appendChild(allTab);
+
+  PEOPLE.forEach(p=>{
+    const tab = document.createElement('button');
+    tab.className = 'tab' + (activeFilter===p ? ' is-active' : '');
+    if(activeFilter===p) tab.style.setProperty('--tab-accent', COLOR[p]);
+    tab.innerHTML = `<span class="dot" style="background:${activeFilter===p?'#fff':COLOR[p]}"></span>${p}`;
+    tab.onclick = ()=>setFilter(p);
+    el.appendChild(tab);
+  });
+}
+
+function weekdayIndex(w){
+  const map = {'Thứ 2':0,'Thứ 3':1,'Thứ 4':2,'Thứ 5':3,'Thứ 6':4,'Thứ 7':5,'Chủ nhật':6};
+  return map[w];
+}
+
+function roleOf(d, person){
+  if(d.sang===person) return {role:'sang', label:'Ca sáng'};
+  if(d.toi===person) return {role:'toi', label:'Ca tối'};
+  return {role:'nghi', label:'Nghỉ'};
+}
+
+function renderCalendar(){
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+  const leadEmpty = weekdayIndex(SCHEDULE[0].weekday);
+  for(let i=0;i<leadEmpty;i++){
+    const e = document.createElement('div');
+    e.className = 'day-cell empty';
+    grid.appendChild(e);
+  }
+  SCHEDULE.forEach(d=>{
+    const cell = document.createElement('div');
+    const pad = String(d.day).padStart(2,'0');
+    const noteHtml = d.note ? `<div class="note-line">${d.note}</div>` : '';
+
+    if(activeFilter){
+      const r = roleOf(d, activeFilter);
+      cell.className = 'day-cell filtered-' + r.role + (d.note?' note':'');
+      cell.style.setProperty('--accent', COLOR[activeFilter]);
+      const context = r.role==='nghi'
+        ? `Sáng: ${d.sang} · Tối: ${d.toi}`
+        : `Nghỉ: ${d.nghi}`;
+      cell.innerHTML = `
+        <div class="day-weekday">${d.weekday}</div>
+        <div class="day-num">${pad}</div>
+        <div class="role-badge role-${r.role}">${r.label}</div>
+        <div class="context-line">${context}</div>
+        ${noteHtml}
+      `;
+    } else {
+      cell.className = 'day-cell' + (d.note?' note':'');
+      cell.innerHTML = `
+        <div class="day-weekday">${d.weekday}</div>
+        <div class="day-num">${pad}</div>
+        <div class="shift-line"><span class="shift-tag">Sáng</span><span class="swatch" style="background:${COLOR[d.sang]}"></span>${d.sang}</div>
+        <div class="shift-line"><span class="shift-tag">Tối</span><span class="swatch" style="background:${COLOR[d.toi]}"></span>${d.toi}</div>
+        <div class="off-line">Nghỉ: ${d.nghi}</div>
+        ${noteHtml}
+      `;
+    }
+    grid.appendChild(cell);
+  });
+}
+
+document.getElementById('updatedNote').textContent = 'Tổng ' + SCHEDULE.length + ' ngày · 3 nhân sự';
+
+renderStats();
+renderFilterBar();
+renderCalendar();
+</script>
+</body>
+</html>
